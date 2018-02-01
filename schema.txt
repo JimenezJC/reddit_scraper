@@ -1,0 +1,23 @@
+Objects are ->
+					Post
+					Comment
+					Subreddit
+					
+
+User must input a search term and an optional subreddit specific search
+
+
+the program will then take these options and search reddit
+
+so the first page loaded is the reddit search
+then we go and follow the link provided to scrape the web 
+
+so 
+stuff gets scraped
+put into Posts
+put into Subreddit
+put into Comments
+
+then after the data is gathered
+the user can run queries on the data
+
