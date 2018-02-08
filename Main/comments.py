@@ -1,4 +1,4 @@
-class Comment(object):
+chttps://github.com/JimenezJC/parallel_computing.gitlass Comment(object):
     """ Class for the Comment Object
 
         Attributes:
@@ -22,8 +22,6 @@ class CommentList(object):
             comments = a list that will hold all comments objects
             size = the size of the comments list
     """
-
-
     def __init__(self, comments = []):
         self.comments = comments
         self.size = len(comments)
