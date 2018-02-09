@@ -11,15 +11,13 @@ class Comment(object):
         Attributes:
             user = A string that shows the name of the user posting the comment
             content = A string that shows the content of the comment
-            upvotes = An intenger that shows the amount of upvotes on a comment
-            downvotes= An integer that shows the amount of downvotes on a comment
+            upvotes = An intenger that shows the amount of upvotes/downvotes
 
     """
-    def __init__(self,user, content, upvotes, downvotes):
+    def __init__(self,user, content, score):
         self.user = user
         self.content = content
-        self.upvotes = upvotes
-        self.downvotes = downvotes
+        self.score = score
 
 
 class CommentList(object):
