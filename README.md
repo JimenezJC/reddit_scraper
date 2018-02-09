@@ -1,2 +1,2 @@
 # reddit_scraper
-scrapuing reddit 
+scraping reddit 

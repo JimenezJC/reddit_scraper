@@ -1,3 +1,10 @@
+import urllib.request
+from comments import Comment, CommentList
+from bs4 import BeautifulSoup
+import datetime
+import random
+import re
+
 class Post(object):
     """This class is for the Post objects
 
@@ -11,12 +18,13 @@ class Post(object):
 
     """
 
-    def __init__(self,title,user,comments,timeSubmitted, link, commentsLink):
+    def __init__(self,title,user,numberOfComments,timeSubmitted, link, commentsLink):
         self.title = title
-        self.comments = comments
+        self.numberOfComments = numberOfComments
         self.timeSubmitted = timeSubmitted
         self.link = link
         self.commentsLink = commentsLink
+        self.comments = CommentList()
 
 
 

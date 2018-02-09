@@ -1,4 +1,11 @@
-chttps://github.com/JimenezJC/parallel_computing.gitlass Comment(object):
+import urllib.request
+from post import PostList, Post
+from bs4 import BeautifulSoup
+import datetime
+import random
+import re
+
+class Comment(object):
     """ Class for the Comment Object
 
         Attributes:

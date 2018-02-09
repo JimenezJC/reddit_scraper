@@ -35,6 +35,21 @@ class Scraper(object):
             nothing, but it will create a file a csv file for the user and put it in a
             folder in document.
         """
+
+
+    def clear(self):
+        """
+        This function clears out the library attribute of the scraper object
+
+        Args:
+            self: current instance of the object
+
+        Return:
+            nothing, just clears out the library attribute
+        """
+        del self.library[:]
+
+
     def scrape(self, search):
         """
         This function scrapes reddit search for posts and comments based off the search input
@@ -99,5 +114,19 @@ class Scraper(object):
                 continue
         return posts
         
-    def scrapeComments(self, posts):
+    def scrapeComments(self,posts):
+        """
+        This function uses the bsObj gotten from BeautifulSoup4 to get 
+        all the comment information from the threads we scraped in the 
+        scrapePosts
+
+        Args:
+            self: current instance of the scraper object
+            posts: a postList object containing all the posts just created
+        
+        Returns:
+            comments: a commentList object that contains all the comments
+                      objects we just scraped.
+        """
+
         
