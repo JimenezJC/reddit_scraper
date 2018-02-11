@@ -62,6 +62,9 @@ class Scraper(object):
         self.library.append(posts)
         comments = self.scrapeComments(posts)
         self.library.append(comments)
+    
+    def printResults(self):
+        
 
     def scrapePosts(self, search, extended=None):
         """
