@@ -37,6 +37,7 @@ class Scraper(object):
         """
 
 
+
     def clear(self):
         """
         This function clears out the library attribute of the scraper object
@@ -71,7 +72,19 @@ class Scraper(object):
         This functions prints the most recent search done using the scraper
         Args:
             self: the current instance of the object
+        Returns:
+            nothing, only prints out the scrape results in a readable format.
+            turning the latest scrape into a csv is an option however. 
         """
+        for i in range(len(self.library)):
+            if(i == 0):
+                print('posts')
+                for (post in self.library[i].posts):
+                    print(post.toString())
+            else:
+                print('comments')
+                for (comment in self.library[i].comments):
+                    print(comment.toString())
 
     def scrapePosts(self, search, extended=None):
         """

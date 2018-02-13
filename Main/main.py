@@ -25,6 +25,7 @@ def main():
     search = input('what would you like to serach for? ')
 
     scrappy.scrape(search)
+
     
 
 

@@ -10,7 +10,7 @@ class Post(object):
 
         Attributes:
             title: A String object that holds the title of the post
-            comments: is an integer that holds the amount of comments made in
+            numberOfComments: is an integer that holds the amount of comments made in
                       the post
             timeSubmitted: a datetime object that tracks the date and time the
                            post was created
@@ -20,11 +20,22 @@ class Post(object):
 
     def __init__(self,title,user,numberOfComments,timeSubmitted, link, commentsLink):
         self.title = title
+        self.user = user
         self.numberOfComments = numberOfComments
         self.timeSubmitted = timeSubmitted
         self.link = link
         self.commentsLink = commentsLink
         self.comments = CommentList()
+
+    def toString(self):
+        """
+        This function turns the object into a readable string
+        Args:
+            self: current instance of object
+        Returns:
+            str: String that displays the object's infromation
+        """
+        return(str(self.title)+ ' ' + str(self.user) + ' ' + str(self.numberOfComments))
 
 
 
