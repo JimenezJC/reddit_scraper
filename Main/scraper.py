@@ -1,10 +1,13 @@
-import urllib.request
-from post import PostList, Post
-from comments import Comment, CommentList
-from bs4 import BeautifulSoup
 import datetime
 import random
 import re
+import urllib.request
+
+from bs4 import BeautifulSoup
+
+from comments import Comment, CommentList
+from post import Post, PostList
+
 
 class Scraper(object):
     """ Class for Scraper object which will scrape reddit.com
@@ -64,7 +67,11 @@ class Scraper(object):
         self.library.append(comments)
     
     def printResults(self):
-        
+        """
+        This functions prints the most recent search done using the scraper
+        Args:
+            self: the current instance of the object
+        """
 
     def scrapePosts(self, search, extended=None):
         """
@@ -134,4 +141,3 @@ class Scraper(object):
                 comment = Comment(user, post, score)
                 comments.add(comment)
         return comments
-
