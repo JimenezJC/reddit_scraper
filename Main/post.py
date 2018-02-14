@@ -1,9 +1,9 @@
 import urllib.request
-from comments import Comment, CommentList
 from bs4 import BeautifulSoup
 import datetime
 import random
 import re
+
 
 class Post(object):
     """This class is for the Post objects

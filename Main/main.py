@@ -26,4 +26,7 @@ def main():
 
     scrappy.scrape(search)
     scrappy.printResults()
-    
+    scrappy.turnToCSV()
+
+
+if __name__ == "__main__": main()

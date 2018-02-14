@@ -41,7 +41,7 @@ class Scraper(object):
                                           quotechar='|',
                                           quoting=csv.QUOTE_MINIMAL
                                           )
-            for(post in self.library[0].posts):
+            for post in self.library[0].posts:
                 rwiter.writerow([post.title,
                                  post.user,
                                  post.numberOfComments,
@@ -55,7 +55,7 @@ class Scraper(object):
                                           quotechar='|',
                                           quoting=csv.QUOTE_MINIMAL
                                           )
-            for(comment in self.library[1].comments):
+            for comment in self.library[1].comments:
                 rwriter.writerow([comment.user,
                                   comment.content,
                                   comment.score])
@@ -75,11 +75,11 @@ class Scraper(object):
         for i in range(len(self.library)):
             if(i == 0):
                 print('posts')
-                for (post in self.library[i].posts):
+                for post in self.library[i].posts:
                     print(post.toString())
             else:
                 print('comments')
-                for (comment in self.library[i].comments):
+                for comment in self.library[i].comments:
                     print(comment.toString())
 
 
@@ -107,13 +107,13 @@ class Scraper(object):
             commentsList object.
         """
         self.latestSearch = search
-        posts = self.scrapePosts(search)
-        self.library.append(posts)
-        comments = self.scrapeComments(posts)
+        postsList = self.scrapePosts(search)
+        self.library.append(postsList)
+        comments = self.scrapeComments(postsList)
         self.library.append(comments)
 
 
-    def scrapePosts(self, search, extended=None):
+    def scrapePosts(self, search, extended=""):
         """
         This function uses beautifulsoup4 to create a bsObj which we can then use to scrape
         for information. The function is recursive and will continue to search reddit pages
@@ -132,7 +132,7 @@ class Scraper(object):
         if self.subReddit == None:
             baseUrl = ("https://www.reddit.com/search?q=" + search + extended)
         else:
-            baseUrl = ("https://www.reddit.com/r/"+ self.subReddit +"/search?q="+ search +"&restrict_sr=on&sort=relevance&t=all" + extended)
+                        baseUrl = ("https://www.reddit.com/r/"+ self.subReddit +"/search?q="+ search +"&restrict_sr=on&sort=relevance&t=all" + extended)
         req = urllib.request.Request(baseUrl, headers = {'User-Agent': 'Mozilla/5.0'})
         html = urllib.request.urlopen(req).read()
         bsObj = BeautifulSoup(html, 'lxml')
@@ -147,7 +147,7 @@ class Scraper(object):
             post = Post(title, user, comments,timeSubmitted,postLink, commentLink)
             posts.add(post)
         footer = bsObj.find("footer")
-        for i in footer.findAl("a"):
+        for i in footer.findAll("a"):
             if(i.text == "next ,"):
                 print(i.get('href')[83:])
                 morePosts = self.scrapePosts(search,(i.get('href')[83:]))
@@ -156,27 +156,29 @@ class Scraper(object):
                 continue
         return posts
 
-    def scrapeComments(self,posts):
+    def scrapeComments(self,postList):
         """
         This function uses the bsObj gotten from BeautifulSoup4 to get
         all the comment information from the threads we scraped in the
         scrapePosts
         Args:
             self: current instance of the scraper object
-            posts: a postList object containing all the posts just created
+            postList: a postList object containing all the posts just created
         Returns:
             comments: a commentList object that contains all the comments
                       objects we just scraped.
         """
         comments = CommentList()
-        for post in posts:
+        for post in postList.posts:
             commentLink = post.commentsLink
             req = urllib.request.Request(commentLink, headers = {'User-Agent':'Mozilla/5.0'})
             html = urllib.request.urlopen(req).read()
             bsObj = BeautifulSoup(html, 'lxml')
-            for comm in bsObj.findal("div", {"class":"entry"}):
-                user = comm.p.find("a",{"class":"author"}).text
-                score = comm.p.find("span",{"class":"likes"}).text[:-6]
+            for comm in bsObj.findAll("div", {"class":"entry"})[1:]:
+                print('lol')
+                print(comm.p.prettify())
+                user = comm.p.findAll("a")[1].text
+                score = comm.p.findAll("span")[3].text[:-6]
                 post = comm.div.div.text
                 comment = Comment(user, post, score)
                 comments.add(comment)
