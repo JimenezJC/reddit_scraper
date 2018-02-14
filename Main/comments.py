@@ -26,9 +26,9 @@ class Comment(object):
             self: current instance of object
         Returns:
             string: String that displays the object's infromation
-        """ 
+        """
         return(str(self.user)+ '  ' + str(self.content)+ ' '+ str(self.score))
-        
+
 
 class CommentList(object):
     """ Class that will be used to run queries on all Comment objects

@@ -2,6 +2,7 @@ import datetime
 import random
 import re
 import urllib.request
+import csv
 
 from bs4 import BeautifulSoup
 
@@ -35,7 +36,51 @@ class Scraper(object):
             nothing, but it will create a file a csv file for the user and put it in a
             folder in document.
         """
+        with open(self.latestSearch + '_posts.csv', 'wb') as csvfile:
+            rwriter = csv.writer(csvfile, delimiter=',',
+                                          quotechar='|',
+                                          quoting=csv.QUOTE_MINIMAL
+                                          )
+            for(post in self.library[0].posts):
+                rwiter.writerow([post.title,
+                                 post.user,
+                                 post.numberOfComments,
+                                 post.timeSubmitted,
+                                 post.link,
+                                 post.commentsLink,
+                                 ])
 
+        with open(self.latestSearch + '_comments.csv', 'wb') as csvfile:
+            rwriter = csv.writer(csvfile, delimiter=',',
+                                          quotechar='|',
+                                          quoting=csv.QUOTE_MINIMAL
+                                          )
+            for(comment in self.library[1].comments):
+                rwriter.writerow([comment.user,
+                                  comment.content,
+                                  comment.score])
+
+
+
+
+    def printResults(self):
+        """
+        This functions prints the most recent search done using the scraper
+        Args:
+            self: the current instance of the object
+        Returns:
+            nothing, only prints out the scrape results in a readable format.
+            turning the latest scrape into a csv is an option however.
+        """
+        for i in range(len(self.library)):
+            if(i == 0):
+                print('posts')
+                for (post in self.library[i].posts):
+                    print(post.toString())
+            else:
+                print('comments')
+                for (comment in self.library[i].comments):
+                    print(comment.toString())
 
 
     def clear(self):
@@ -58,47 +103,29 @@ class Scraper(object):
             search: a string that is given by the user. this string will be our main
                     search term when scraping
         Returns:
-            nothing, but the library array will be filled with a postLists object, as well as a 
-            commentsList object. 
+            nothing, but the library array will be filled with a postLists object, as well as a
+            commentsList object.
         """
         self.latestSearch = search
         posts = self.scrapePosts(search)
         self.library.append(posts)
         comments = self.scrapeComments(posts)
         self.library.append(comments)
-    
-    def printResults(self):
-        """
-        This functions prints the most recent search done using the scraper
-        Args:
-            self: the current instance of the object
-        Returns:
-            nothing, only prints out the scrape results in a readable format.
-            turning the latest scrape into a csv is an option however. 
-        """
-        for i in range(len(self.library)):
-            if(i == 0):
-                print('posts')
-                for (post in self.library[i].posts):
-                    print(post.toString())
-            else:
-                print('comments')
-                for (comment in self.library[i].comments):
-                    print(comment.toString())
+
 
     def scrapePosts(self, search, extended=None):
         """
         This function uses beautifulsoup4 to create a bsObj which we can then use to scrape
         for information. The function is recursive and will continue to search reddit pages
         until none are left.
-        Args: 
+        Args:
             self: current instance of the object
             search: a string that is given by the user and is the main arguement for our search
                     query
             extended: the extended link, is defaulted to none for our base-case and is used
                       for every recursive call after.
         Returns:
-            posts: a postLists object that contains all the post objects. 
+            posts: a postLists object that contains all the post objects.
                    we return this for the recursive loop as well to give it back to the original
                    "scrape" function.
         """
@@ -122,17 +149,17 @@ class Scraper(object):
         footer = bsObj.find("footer")
         for i in footer.findAl("a"):
             if(i.text == "next ,"):
-                print(i.get('href')[83:]) 
+                print(i.get('href')[83:])
                 morePosts = self.scrapePosts(search,(i.get('href')[83:]))
                 posts.addFromList(morePosts)
             else:
                 continue
         return posts
-        
+
     def scrapeComments(self,posts):
         """
-        This function uses the bsObj gotten from BeautifulSoup4 to get 
-        all the comment information from the threads we scraped in the 
+        This function uses the bsObj gotten from BeautifulSoup4 to get
+        all the comment information from the threads we scraped in the
         scrapePosts
         Args:
             self: current instance of the scraper object

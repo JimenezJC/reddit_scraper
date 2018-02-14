@@ -10,14 +10,17 @@ class Post(object):
 
         Attributes:
             title: A String object that holds the title of the post
-            numberOfComments: is an integer that holds the amount of comments made in
-                      the post
+            user: the reddit user that is the author of the post
+            numberOfComments: is an integer that holds the amount of comments
+                              made in the post
             timeSubmitted: a datetime object that tracks the date and time the
                            post was created
-            link: A string that holds the link to the comments of the post
+            link: A string that holds the main URL the post is linked too
+            commentsLink: A string that holds the link for the comments of the
+                          post
+
 
     """
-
     def __init__(self,title,user,numberOfComments,timeSubmitted, link, commentsLink):
         self.title = title
         self.user = user
@@ -25,7 +28,7 @@ class Post(object):
         self.timeSubmitted = timeSubmitted
         self.link = link
         self.commentsLink = commentsLink
-        self.comments = CommentList()
+
 
     def toString(self):
         """
@@ -49,7 +52,6 @@ class PostList(object):
             search: String that holds the search query for this postlist
 
     """
-
     def __init__(self,search, posts = []):
         self.search = search
         self.posts = posts
