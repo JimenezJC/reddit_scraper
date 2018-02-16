@@ -36,13 +36,13 @@ class Scraper(object):
             nothing, but it will create a file a csv file for the user and put it in a
             folder in document.
         """
-        with open(self.latestSearch + '_posts.csv', 'wb') as csvfile:
+        with open(self.latestSearch + '_posts.csv', 'w') as csvfile:
             rwriter = csv.writer(csvfile, delimiter=',',
                                           quotechar='|',
                                           quoting=csv.QUOTE_MINIMAL
                                           )
             for post in self.library[0].posts:
-                rwiter.writerow([post.title,
+                rwriter.writerow([post.title,
                                  post.user,
                                  post.numberOfComments,
                                  post.timeSubmitted,
@@ -50,7 +50,7 @@ class Scraper(object):
                                  post.commentsLink,
                                  ])
 
-        with open(self.latestSearch + '_comments.csv', 'wb') as csvfile:
+        with open(self.latestSearch + '_comments.csv', 'w') as csvfile:
             rwriter = csv.writer(csvfile, delimiter=',',
                                           quotechar='|',
                                           quoting=csv.QUOTE_MINIMAL
@@ -132,13 +132,15 @@ class Scraper(object):
         if self.subReddit == None:
             baseUrl = ("https://www.reddit.com/search?q=" + search + extended)
         else:
-                        baseUrl = ("https://www.reddit.com/r/"+ self.subReddit +"/search?q="+ search +"&restrict_sr=on&sort=relevance&t=all" + extended)
+            baseUrl = ("https://www.reddit.com/r/"+ self.subReddit +"/search?q="+ search +"&restrict_sr=on&sort=relevance&t=all" + extended)
+        print(baseUrl)
         req = urllib.request.Request(baseUrl, headers = {'User-Agent': 'Mozilla/5.0'})
         html = urllib.request.urlopen(req).read()
         bsObj = BeautifulSoup(html, 'lxml')
         posts = PostList(search)
-        for link in bsObj.findAll("div", {"class": "no-linkflair"}):
+        for link in bsObj.findAll("div", {"class": "search-result"}):
             title = link.div.a.text
+            print(title)
             postLink = link.a.get('href')
             comments = link.div.div.a.text[:-8]
             commentLink = link.div.div.a.get('href')
@@ -146,9 +148,11 @@ class Scraper(object):
             timeSubmitted = link.div.div.find("span",{"class":"search-time"}).text[10:]
             post = Post(title, user, comments,timeSubmitted,postLink, commentLink)
             posts.add(post)
+        print('hello?')
         footer = bsObj.find("footer")
         for i in footer.findAll("a"):
-            if(i.text == "next ,"):
+            print('lol')
+            if("next" in i.text):
                 print(i.get('href')[83:])
                 morePosts = self.scrapePosts(search,(i.get('href')[83:]))
                 posts.addFromList(morePosts)
@@ -175,11 +179,12 @@ class Scraper(object):
             html = urllib.request.urlopen(req).read()
             bsObj = BeautifulSoup(html, 'lxml')
             for comm in bsObj.findAll("div", {"class":"entry"})[1:]:
-                print('lol')
-                print(comm.p.prettify())
-                user = comm.p.findAll("a")[1].text
-                score = comm.p.findAll("span")[3].text[:-6]
-                post = comm.div.div.text
-                comment = Comment(user, post, score)
-                comments.add(comment)
+                if(comm.p.findAll("span") == []):
+                    continue
+                else:
+                    user = comm.p.findAll("a")[1].text
+                    score = comm.p.findAll("span")[3].text[:-6]
+                    post = comm.div.div.text
+                    comment = Comment(user, post, score)
+                    comments.add(comment)
         return comments
