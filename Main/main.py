@@ -22,9 +22,15 @@ def main():
 
     scrappy = Scraper(subReddit)
 
-    search = input('what would you like to serach for? ')
+    search = input('what would you like to search for? ')
 
-    scrappy.scrape(search)
+    commentSearch = False
+    commentBool = input('do you want to include comments in the search? (warning will be a huge loading time) (y/n)')
+    if (commentBool == 'y'):
+        commentSearch = True
+
+
+    scrappy.scrape(search, commentSearch)
     scrappy.printResults()
     scrappy.turnToCSV()
 

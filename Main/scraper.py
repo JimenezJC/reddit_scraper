@@ -94,7 +94,7 @@ class Scraper(object):
         del self.library[:]
 
 
-    def scrape(self, search):
+    def scrape(self, search, commentBool):
         """
         This function scrapes reddit search for posts and comments based off the search input
         given by the user
@@ -102,6 +102,7 @@ class Scraper(object):
             self: current instance of the objectz
             search: a string that is given by the user. this string will be our main
                     search term when scraping
+            commentBool: whether or not we should search for comments as well
         Returns:
             nothing, but the library array will be filled with a postLists object, as well as a
             commentsList object.
@@ -109,8 +110,11 @@ class Scraper(object):
         self.latestSearch = search
         postsList = self.scrapePosts(search)
         self.library.append(postsList)
-        comments = self.scrapeComments(postsList)
-        self.library.append(comments)
+        if commentBool:
+            comments = self.scrapeComments(postsList)
+            self.library.append(comments)
+        else:
+            self.library.append(CommentList())
 
 
     def scrapePosts(self, search, extended=""):
@@ -133,14 +137,12 @@ class Scraper(object):
             baseUrl = ("https://www.reddit.com/search?q=" + search + extended)
         else:
             baseUrl = ("https://www.reddit.com/r/"+ self.subReddit +"/search?q="+ search +"&restrict_sr=on&sort=relevance&t=all" + extended)
-        print(baseUrl)
         req = urllib.request.Request(baseUrl, headers = {'User-Agent': 'Mozilla/5.0'})
         html = urllib.request.urlopen(req).read()
         bsObj = BeautifulSoup(html, 'lxml')
         posts = PostList(search)
         for link in bsObj.findAll("div", {"class": "search-result"}):
             title = link.div.a.text
-            print(title)
             postLink = link.a.get('href')
             comments = link.div.div.a.text[:-8]
             commentLink = link.div.div.a.get('href')
@@ -148,12 +150,9 @@ class Scraper(object):
             timeSubmitted = link.div.div.find("span",{"class":"search-time"}).text[10:]
             post = Post(title, user, comments,timeSubmitted,postLink, commentLink)
             posts.add(post)
-        print('hello?')
         footer = bsObj.find("footer")
         for i in footer.findAll("a"):
-            print('lol')
             if("next" in i.text):
-                print(i.get('href')[83:])
                 morePosts = self.scrapePosts(search,(i.get('href')[83:]))
                 posts.addFromList(morePosts)
             else:
